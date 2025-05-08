@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link rel="stylesheet" href="css/micodigo.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">FIOR DI SALE 🍝</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="index.html">INICIO</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="menu.html">PRODUCTOS</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="pedidos.html">PEDIDOS</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link disabled" aria-disabled="true">🍔</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="container text-white ">
+      <div class="row">
+        <div class="col text-center ">
+          <h1 class="bg">BIENVENIDO </h1>
+          <h1 class="bg">PEDIDOS</h1>
+
+        </div>
+      </div>
+    </div>
+    <div class="container ">
+      <div class="row">
+        <div class="col">
+          <select id="categoria">
+            <option value="Chicken">Pollo</option>
+            <option value="Beef">Carne</option>
+            <option value="Seafood">Pescado</option>
+            <option value="Dessert">Postres</option>
+            <option value="Pasta">Pasta</option>
+          </select>
+          
+          <div id="platos"></div>
+          
+
+        
+        </div>
+      </div>
+    </div>
+
+    <div class="container c">
+      <div class="row">
+        <div class="col">
+          <h2>Carrito</h2>
+            <table  class="table ">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Precio</th>
+                  <th>Cantidad</th>
+                  <th>Total</th>
+                  <th>Eliminar</th>
+                </tr>
+              </thead>
+              <tbody  id="carrito"></tbody>
+            </table>
+
+            <p class="total"><strong>Total general: $<span id="total_general"></span></strong></p>    
+       </div>
+      <div class="row">
+          <div class="col text-center">
+            <button id="botonCompra" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#btnModalCompra">
+              Confirmar compra
+            </button>            
+          </div>
+
+        </div>
+        </div>
+      </div>
+    </div>
+  
+
+
+           <!-- Modal de Factura -->
+      <div class="modal fade" id="btnModalCompra" tabindex="-1" aria-labelledby="btnModalCompraLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="btnModalCompraLabel">Factura</h5>
+              <button type="button" class="btn-close cancelar_compra" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Precio Unitario</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody id="tabla_factura"></tbody>
+              </table>
+              <p>Total de la factura: <strong id="total_factura"></strong></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="cancelar_compra" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" id="btnConfirmarCompra">Confirmar Compra</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+    <script src="js/micodigo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+  </body>
+</html>
