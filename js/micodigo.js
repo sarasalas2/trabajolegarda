@@ -235,6 +235,9 @@ confirmarCompra.addEventListener('click', () => {
   const cierreModal = bootstrap.Modal.getOrCreateInstance(modal);
   cierreModal.hide();
   tabla_factura.innerHTML = '';
+
+  location.reload();
+
 });
 
 
@@ -292,7 +295,11 @@ function imprimirHistorial() {
 }
 });
 const limpiarHistorial = document.getElementById('limpiar');
+
 limpiarHistorial.addEventListener('click', () => {
-  localStorage.clear(); 
-  tablaHistorial.innerHTML = '';  
+  localStorage.removeItem('HistorialPedidos'); // ✅ Solo borra el historial
+  location.reload(); // 🔄 Recarga la página
 });
+
+
+
