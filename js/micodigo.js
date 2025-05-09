@@ -56,9 +56,14 @@ if (select && menu) {
 
 // CARRITO DE COMPRAS
 const contenedor = document.getElementById('platos');
-const carrito = [];
 const tablaCarrito = document.getElementById('carrito');
 const totalGeneral = document.getElementById('total_general');
+
+//localstorage
+
+const carritoGuardado = localStorage.getItem('ArrCarrito');
+const carrito = carritoGuardado ? JSON.parse(carritoGuardado) : [];
+
 
 
 const selectPedido = document.getElementById('categoria');
@@ -89,10 +94,10 @@ function cargarPlatos(categoria) {
         contenedor.appendChild(div);
         
         const boton = div.querySelector('.agregar-carrito');
-        boton.addEventListener('click', () => {
-          
 
+        boton.addEventListener('click', () => {
           const existente = carrito.find(item => item.nombre === plato.strMeal);
+
           if (existente) {
             existente.cantidad += 1;
           } else {
@@ -102,45 +107,43 @@ function cargarPlatos(categoria) {
               cantidad: 1
             });
           }
+
+          localStorage.setItem('ArrCarrito', JSON.stringify(carrito));
           actualizarCarrito();
         });
+
       });
     })
     .catch(err => {
       console.error('Error al cargar platos:', err);
       contenedor.innerHTML = 'Error al cargar los platos.';
     });
-}
+};
 
 
 if (contenedor && tablaCarrito && totalGeneral && selectPedido) {
+
   cargarPlatos(selectPedido.value);
   selectPedido.addEventListener('change', () => {
     cargarPlatos(selectPedido.value);
+
   });
 }
-
-
-
-selectPedido.addEventListener('change', () => {
-  cargarPlatos(selectPedido.value);
-});
 // console.log("precio",generarPrecio());
 /////////////////////////////////
 //carrito 
 function actualizarCarrito() {
-  tablaCarrito.innerHTML = ''; 
-  let total = 0; 
+  tablaCarrito.innerHTML = '';
+  let total = 0;
 
   carrito.forEach((item, index) => {
-    const precio = parseFloat(item.precio) || 0;
-    const subtotal = precio * item.cantidad;
+    const subtotal = item.precio * item.cantidad;
     total += subtotal;
-  
+
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${item.nombre}</td>
-      <td>$${precio.toFixed(2)}</td>
+      <td>$${item.precio.toFixed(2)}</td>
       <td>${item.cantidad}</td>
       <td>$${subtotal.toFixed(2)}</td>
       <td><button class="btn btn-danger btn-sm boton_eliminar" data-index="${index}">Eliminar</button></td>
@@ -148,11 +151,13 @@ function actualizarCarrito() {
     tablaCarrito.appendChild(row);
   });
 
-  totalGeneral.textContent = `$${total.toFixed(2)}`;  
+  totalGeneral.textContent = `$${total.toFixed(2)}`;
+  localStorage.setItem('ArrCarrito', JSON.stringify(carrito));
 
 
   agregarEventosEliminar();
 }
+
 
  
   
@@ -160,11 +165,12 @@ function actualizarCarrito() {
 function agregarEventosEliminar() {
   tablaCarrito.querySelectorAll('.boton_eliminar').forEach(btn => {
     btn.addEventListener('click', () => {
-      // Convierte a número entero
+      
       const index = parseInt(btn.getAttribute('data-index'), 10);
       carrito.splice(index, 1);
+      localStorage.setItem('ArrCarrito', JSON.stringify(carrito)); 
+      actualizarCarrito();  
 
-      actualizarCarrito();
     });
   });
 };
@@ -178,8 +184,8 @@ const botonModal = document.getElementById('botonCompra');
 const modal = document.getElementById('btnModalCompra');
 const confirmarCompra = document.getElementById('btnConfirmarCompra');
 const tabla_factura = document.getElementById('tabla_factura');
-const totalFactura = document.getElementById('total_factura');  // Para mostrar el total en el modal
-console.log(totalFactura);
+const totalFactura = document.getElementById('total_factura');  
+
 
 botonModal.addEventListener('click', () => {
   tabla_factura.innerHTML = '';
@@ -187,6 +193,7 @@ botonModal.addEventListener('click', () => {
 
   if (carrito.length === 0) {
     alert('No hay platos en el carrito');
+    tabla_factura.innerHTML = '';
   } else {
     carrito.forEach(item => {
       const precio = parseFloat(item.precio) || 0;
@@ -208,20 +215,84 @@ botonModal.addEventListener('click', () => {
 });
 
 
+
 confirmarCompra.addEventListener('click', () => {
-  carrito.length = 0;
+
+  const historial = JSON.parse(localStorage.getItem('HistorialPedidos')) || [];
+
+  
+  if (carrito.length > 0) {
+    historial.push(carrito.map(item => ({ ...item })));
+
+    localStorage.setItem('HistorialPedidos', JSON.stringify(historial));  
+  }
+  
+
+  carrito.length = 0; 
   actualizarCarrito();
   alert('Compra confirmada. ¡VUELVA PRONTO SUMERCE!');
 
-  const cierreModal = bootstrap.Modal.getInstance(modal);
-  if (cierreModal) {
-    cierreModal.hide(); // Cierra el modal correctamente
-  }
-
-  tabla_factura.innerHTML = ''; //vacia la factura
-
-  
+  const cierreModal = bootstrap.Modal.getOrCreateInstance(modal);
+  cierreModal.hide();
+  tabla_factura.innerHTML = '';
 });
 
 
 
+
+///////////////////////////////////////////////
+//historial de compras
+const llamarLocal = JSON.parse(localStorage.getItem('ArrCarrito')) || [];
+
+document.addEventListener('DOMContentLoaded', () => {
+  const tablaHistorial = document.getElementById('historial');
+  imprimirHistorial();
+
+
+
+function imprimirHistorial() {
+ 
+  tablaHistorial.innerHTML ='';
+  const historialData = JSON.parse(localStorage.getItem('HistorialPedidos')) || [];
+  let totalGeneral = 0;
+
+  historialData.forEach(pedido => {
+    
+    pedido.forEach(item => {
+     
+      const fila = document.createElement('tr');
+      const producto = document.createElement('td');
+      const precio = document.createElement('td');
+      const cantidad = document.createElement('td');
+      const subtotal = document.createElement('td');
+
+      const totalItem = item.precio * item.cantidad;
+      totalGeneral += totalItem;
+
+      producto.textContent = item.nombre;
+      precio.textContent = `$${item.precio.toFixed(2)}`;
+      cantidad.textContent = item.cantidad;
+      subtotal.textContent = `$${totalItem.toFixed(2)}`;
+
+      fila.appendChild(producto);
+      fila.appendChild(precio);
+      fila.appendChild(cantidad);
+      fila.appendChild(subtotal);
+
+      tablaHistorial.appendChild(fila);
+    });
+  });
+
+  const filaTotal = document.createElement('tr');
+  filaTotal.innerHTML = `
+    <td colspan="3"><strong>Total General</strong></td>
+    <td><strong>$${totalGeneral.toFixed(2)}</strong></td>
+  `;
+  tablaHistorial.appendChild(filaTotal);
+}
+});
+const limpiarHistorial = document.getElementById('limpiar');
+limpiarHistorial.addEventListener('click', () => {
+  localStorage.clear(); 
+  tablaHistorial.innerHTML = '';  
+});
