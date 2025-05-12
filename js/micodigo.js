@@ -210,6 +210,18 @@ botonModal.addEventListener('click', () => {
       tabla_factura.appendChild(row);
     });
 
+    // puntaje de descuento
+    if (score > 10) {
+      const descuento = total * 0.10; 
+      total -= descuento; 
+      const rowDescuento = document.createElement('tr');
+      rowDescuento.innerHTML = `
+        <td colspan="3"><strong>Descuento (10%)</strong></td>
+        <td><strong>-$${descuento.toFixed(2)}</strong></td>
+      `;
+      tabla_factura.appendChild(rowDescuento);
+    }
+
     totalFactura.textContent = `$${total.toFixed(2)}`;  
   }
 });
@@ -297,9 +309,117 @@ function imprimirHistorial() {
 const limpiarHistorial = document.getElementById('limpiar');
 
 limpiarHistorial.addEventListener('click', () => {
-  localStorage.removeItem('HistorialPedidos'); // ✅ Solo borra el historial
-  location.reload(); // 🔄 Recarga la página
+  localStorage.removeItem('HistorialPedidos'); 
+    location.reload();
 });
 
+
+
+
+///////////////////////////
+//culebrita
+ 
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
+
+  const box = 20;
+  const canvasSize = 20;
+
+  let snake = [{ x: 9 * box, y: 9 * box }];
+  let food = {
+    x: Math.floor(Math.random() * canvasSize) * box,
+    y: Math.floor(Math.random() * canvasSize) * box,
+  };
+  let direction = null;
+  let score = 0;
+
+document.addEventListener("keydown", (e) => {
+  // Prevenir el comportamiento predeterminado de todas las teclas que puedan mover la página
+  e.preventDefault();
+
+  // Movimientos de la serpiente con flechas o WASD
+  const key = e.key.toLowerCase();
+
+  if ((e.key === "ArrowUp" || key === "w") && direction !== "DOWN") direction = "UP";
+  else if ((e.key === "ArrowDown" || key === "s") && direction !== "UP") direction = "DOWN";
+  else if ((e.key === "ArrowLeft" || key === "a") && direction !== "RIGHT") direction = "LEFT";
+  else if ((e.key === "ArrowRight" || key === "d") && direction !== "LEFT") direction = "RIGHT";
+});
+
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < snake.length; i++) {
+      ctx.fillStyle = i === 0 ? "#0f0" : "#7fff00";
+      ctx.fillRect(snake[i].x, snake[i].y, box, box);
+    }
+
+    ctx.fillStyle = "#f00";
+    ctx.fillRect(food.x, food.y, box, box);
+
+    let head = { ...snake[0] };
+    if (direction === "UP") head.y -= box;
+    if (direction === "DOWN") head.y += box;
+    if (direction === "LEFT") head.x -= box;
+    if (direction === "RIGHT") head.x += box;
+
+    if (
+      head.x < 0 ||
+      head.x >= canvas.width ||
+      head.y < 0 ||
+      head.y >= canvas.height ||
+      collision(head, snake)
+    ) {
+      clearInterval(game);
+      alert("¡Perdiste! Puntaje: " + score);
+      return;
+    }
+
+    if (head.x === food.x && head.y === food.y) {
+      score++;
+      document.getElementById("score").textContent = "Puntaje: " + score;
+      food = {
+        x: Math.floor(Math.random() * canvasSize) * box,
+        y: Math.floor(Math.random() * canvasSize) * box,
+      };
+    } else {
+      snake.pop();
+    }
+
+    snake.unshift(head);
+  }
+
+  function collision(head, array) {
+    for (let i = 1; i < array.length; i++) {
+      if (head.x === array[i].x && head.y === array[i].y) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  let game = setInterval(draw, 150);
+
+  // Botón de reinicio
+  document.getElementById("btnReiniciar").addEventListener("click", reiniciarJuego);
+
+  function reiniciarJuego() {
+    snake = [{ x: 9 * box, y: 9 * box }];
+    direction = null;
+    score = 0;
+    document.getElementById("score").textContent = "Puntaje: 0";
+    food = {
+      x: Math.floor(Math.random() * canvasSize) * box,
+      y: Math.floor(Math.random() * canvasSize) * box,
+    };
+
+    clearInterval(game);
+    game = setInterval(draw, 150);
+
+  };
+
+  
+  
 
 

@@ -29,6 +29,10 @@
                     <a class="nav-link" href="pedidos.html">PEDIDOS</a>
                   </li>
                   <li class="nav-item">
+                    <a class="nav-link" href="juego.html">JUEGO</a>
+                  </li>
+                  
+                  <li class="nav-item">
                     <a class="nav-link disabled" aria-disabled="true">🍔</a>
                   </li>
                 </ul>
@@ -67,7 +71,7 @@
       </div>
     </div>
 
-    <div class="container c">
+    <div class="container col2">
       <div class="row">
         <div class="col">
           <h2 class="text-center text-white">Carrito</h2>
@@ -86,6 +90,15 @@
 
             <p class="total"><strong>Total general: $<span id="total_general"></span></strong></p>    
        </div>
+        <div class="row">
+          <div class="snake-game">
+            <h1 class="text-white">🐍 Culebrita</h1>
+            <p class="text-white">En esta seccion te presento el famoso juego de la Culebrita; Aqui podras jugar y si logras un puntaje mayor a 10 recibiras un descuento en tu compra. Para jugar debes usar las flechas de tu teclado, y el objetivo es comer la mayor cantidad de comida posible sin chocar con las paredes o contigo mismo. ¡Buena suerte!</p>
+            <canvas id="game" width="400" height="400"></canvas>
+            <div id="score">Puntaje: 0</div>
+            <button id="btnReiniciar">🔁 Reiniciar</button>
+          </div>
+      </div>
       <div class="row">
           <div class="col text-center">
             <button id="botonCompra" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#btnModalCompra">
@@ -95,6 +108,7 @@
 
         </div>
         </div>
+      </div>
       </div>
     </div>
 
@@ -130,7 +144,11 @@
         <button class="btn btn-dark " id="limpiar">LIMPIAR HISTORIAL</button>
       </div>
   </div>
-
+  
+ 
+  
+ 
+  
 
 
 
